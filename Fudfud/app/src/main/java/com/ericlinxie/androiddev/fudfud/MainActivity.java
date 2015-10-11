@@ -1,5 +1,7 @@
 package com.ericlinxie.androiddev.fudfud;
 
+import java.util.ArrayList;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import android.view.LayoutInflater;
 import android.view.*;
 import android.util.Log;
+import org.json.*;
 
 
 import com.facebook.AccessToken;
@@ -149,20 +152,92 @@ public class MainActivity extends AppCompatActivity {
                 "/search",
                 new GraphRequest.Callback() {
                     @Override
+
                     public void onCompleted(GraphResponse response) {
                         // Insert your code here
                         yourEvents = response.getJSONObject();
+                        try {
 
+                            JSONArray data = response.getJSONObject().getJSONArray("data");
+                            String description;
+                            String title;
+                            String locationName;
+                            JSONObject placeTemp;
+                            double longitude;
+                            double latitude;
+
+                            String[] searchFreeFood = {"FREE", "free food", "free refreshments",
+                                                "free lunch", "free dinner", "meal provided", "refreshments", "will be served"};
+                            int isFreeFood;
+                            EventObject singleEvent;
+                            ArrayList<EventObject> events = new ArrayList<EventObject>();
+                            Log.d("to the", "loop");
+                            Log.d("data", data.toString());
+                            for (int i = 0; i < data.length(); i++) {
+                                Log.d("get the", "description");
+                                if(!data.getJSONObject(i).has("description")){
+                                    description = " ";
+                                }
+                                else {
+                                    description = data.getJSONObject(i).getString("description");
+                                }
+                                Log.d("get the", "title");
+                                if(!data.getJSONObject(i).has("name")){
+                                    title = " ";
+                                }
+                                else{
+                                    title = data.getJSONObject(i).getString("name");
+                                }
+                                Log.d("before the", "search");
+                                Log.d("description: ", description);
+                                for (int j = 0; j < searchFreeFood.length; j++ ) {
+                                    if (description.indexOf(searchFreeFood[j]) != -1 || title.indexOf(searchFreeFood[j]) != -1) {
+                                        if (data.getJSONObject(i).has("place")) {
+                                            placeTemp = data.getJSONObject(i).getJSONObject("place");
+                                            locationName = placeTemp.getString("name");
+                                            Log.d("To the ", "place");
+                                            if (placeTemp.has("location")) {
+                                                latitude = placeTemp.getJSONObject("location").getDouble("latitude");
+                                                longitude = placeTemp.getJSONObject("location").getDouble("longitude");
+                                            } else {
+                                                latitude = 0.0;
+                                                longitude = 0.0;
+                                            }
+                                        }
+                                        else{
+                                            locationName = "no where";
+                                            latitude = 0.0;
+                                            longitude = 0.0;
+                                        }
+                                        Log.d("to the", "new object");
+                                        singleEvent = new EventObject(title, description, locationName, latitude, longitude);
+                                        Log.d("add the", "new object");
+                                        events.add(singleEvent);
+                                        break;
+                                    }
+                                }
+                                Log.d("at the ", "end of loop");
+                            }
+                            Log.d("print the ", "object list");
+                            for (int g = 0; g < events.size(); g++){
+                                Log.d("title: ", events.get(g).title);
+                                Log.d("event: ", events.get(g).toString());
+                            }
+
+                        }
+                            catch (Exception e) {Log.d("wow", "this parsing doesn't work");
+                            }
                         Log.d("the json", yourEvents.toString());
-                        
+
                     }
                 });
 
         Bundle parameters = new Bundle();
-        parameters.putString("q", "free");
+        parameters.putString("q", ".");
         parameters.putString("type", "event");
         parameters.putString("center", "37.76,-122.427");
-        parameters.putString("distance", "100");
+        parameters.putString("distance", "10");
+        parameters.putString("limit","100");
         request.setParameters(parameters);
         GraphRequestAsyncTask task = request.executeAsync();
 //        try {
