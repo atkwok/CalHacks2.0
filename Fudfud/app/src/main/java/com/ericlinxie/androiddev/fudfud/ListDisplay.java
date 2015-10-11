@@ -22,13 +22,16 @@ public class ListDisplay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        ArrayList<Integer> theDistances = intent.getIntegerArrayListExtra(MainActivity.THEDISTANCES);
-        ArrayList<EventObject> theObjects = intent.getParcelableArrayListExtra(MainActivity.THEEVENTS);
-        ArrayList<String> toAdapter = new ArrayList<String>();
+//        ArrayList<Integer> theDistances = intent.getIntegerArrayListExtra(MainActivity.THEDISTANCES);
+//        ArrayList<EventObject> theObjects = intent.getParcelableArrayListExtra(MainActivity.THEEVENTS);
+//        ArrayList<String> toAdapter = new ArrayList<String>();
+//        for(int index = 0; index < theObjects.size(); index++){
+//            toAdapter.add(theObjects.get(index).toString());
+//        }
+        ArrayList<String> toAdapter = intent.getStringArrayListExtra(MainActivity.THEDESCRIPTIONS);
+
         setContentView(R.layout.activity_list_display);
-        for(int index = 0; index < theObjects.size(); index++){
-            toAdapter.add(theObjects.get(index).toString());
-        }
+
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.activity_listview, toAdapter);
 

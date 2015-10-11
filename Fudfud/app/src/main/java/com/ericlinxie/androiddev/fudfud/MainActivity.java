@@ -59,8 +59,11 @@ public class MainActivity extends AppCompatActivity {
     double lon = -122.427;
     public static String THEDISTANCES = "the distances";
     public static String THEEVENTS = "the events";
+    public static String THEDESCRIPTIONS = "the events";
 
     final Parcel p1 = Parcel.obtain();
+
+    ArrayList<String> theDescriptions = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,8 +187,9 @@ public class MainActivity extends AppCompatActivity {
                             double longitude;
                             double latitude;
 
-                            String[] searchFreeFood = {"FREE", "free food", "free refreshments",
-                                                "free lunch", "free dinner", "meal provided", "refreshments", "will be served"};
+                            String[] searchFreeFood = { "free food", "free refreshments",
+                                                "free lunch","free sliver","free chipotle",
+                                    "provided", "free dinner", "meal provided", "refreshments", "will be served"};
                             int isFreeFood;
                             EventObject singleEvent;
 
@@ -232,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                                         singleEvent.addingEventObject(title, description, locationName, latitude, longitude);
                                         Log.d("add the", "new object");
                                         treeEvents.put((int)(latitude - lat + longitude - lon), singleEvent);
+                                        theDescriptions.add(description);
                                         break;
                                     }
                                 }
@@ -252,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Bundle parameters = new Bundle();
-        parameters.putString("q", ".");
+        parameters.putString("q", "f");
         parameters.putString("type", "event");
         parameters.putString("center", "37.76,-122.427");
         parameters.putString("distance", "10");
@@ -262,6 +267,14 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             task.get();
+            Intent intent = new Intent(this, ListDisplay.class);
+            ArrayList<Integer> theDistances = new ArrayList<>(treeEvents.keySet());
+//        intent.putExtra(THEDISTANCES, theDistances);
+            ArrayList<EventObject> theEvents = new ArrayList<>(treeEvents.values());
+//        intent.putExtra(THEEVENTS, theEvents);
+            intent.putExtra(THEDESCRIPTIONS,theDescriptions);
+
+            startActivity(intent);
         }
         catch (Exception e){Log.d("failed", "completely");}
 
@@ -272,13 +285,7 @@ public class MainActivity extends AppCompatActivity {
 //        listView.setAdapter(adapter);
 //        String message =  " smuckers";
 
-        Intent intent = new Intent(this, ListDisplay.class);
-        ArrayList<Integer> theDistances = new ArrayList<>(treeEvents.keySet());
-        intent.putExtra(THEDISTANCES, theDistances);
-        ArrayList<EventObject> theEvents = new ArrayList<>(treeEvents.values());
-        intent.putExtra(THEEVENTS, theEvents);
 
-        startActivity(intent);
     }
 
 
