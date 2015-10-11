@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">We the Food</string>
+    <string name="title_activity_main">Free Fud</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="edit_message">FREE FOOD IS BEST FOOD</string>
+    <string name="button_send">FIND FREE FOOD!</string>
+
+<!-- Added above two ourselves David Alan -->
+    <string name="facebook_app_id">398259697049755</string>
+    <string name="title_activity_display_message">Food Time</string>
+
+    <string name="hello_world">Hello world!</string>
+</resources>
