@@ -22,6 +22,9 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenSource;
 import com.facebook.AccessTokenTracker;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -32,6 +35,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.CallbackManager;
 
 
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +43,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
+    JSONObject yourEvents;
     public final static String EXTRA_MESSAGE = "com.ericlinxie.androiddev.helloworld.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +138,43 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user clicks the Send button */
     public void sendMessage(View view){
         //Do something in response to the button
-        Intent intent = new Intent(this, Main2Activity.class);
-        String message =  " smuckers";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+
+//        Intent intent = new Intent(this, Main2Activity.class);
+        Log.d("is error", "above");
+        AccessToken theToken = AccessToken.getCurrentAccessToken();
+        Log.d("is error", "above");
+
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                theToken,
+                "/search",
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        // Insert your code here
+                        yourEvents = response.getJSONObject();
+
+                        Log.d("the json", yourEvents.toString());
+                        
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("q", "free");
+        parameters.putString("type", "event");
+        parameters.putString("center", "37.76,-122.427");
+        parameters.putString("distance", "100");
+        request.setParameters(parameters);
+        GraphRequestAsyncTask task = request.executeAsync();
+//        try {
+//            task.get();
+//        }
+//        catch (Exception e){Log.d("failed", "completely");}
+
+
+//        String message =  " smuckers";
+//
+//        intent.putExtra(EXTRA_MESSAGE, message);
+//        startActivity(intent);
     }
 
 
