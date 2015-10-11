@@ -47,6 +47,12 @@
                 android:value="com.ericlinxie.androiddev.fudfud.MainActivity" />
             >
 
+
+        </activity>
+        <activity
+            android:name=".location"
+            android:label="@string/title_activity_location"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

@@ -9,7 +9,7 @@ import android.view.View;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
-public class location extends AppCompatActivity {
+public class location extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks {
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -33,6 +33,13 @@ public class location extends AppCompatActivity {
         super.onStart();
         mGoogleApiClient.connect();
     }
+    public void onConnectionSuspended(int i){
+        return;
+    }
+    public void onConnected(Bundle b){
+        return;
+    }
+
 
     @Override
     protected void onStop() {
