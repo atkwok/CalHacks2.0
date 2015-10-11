@@ -13,7 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.LayoutInflater;
@@ -43,11 +45,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     JSONObject yourEvents;
     public final static String EXTRA_MESSAGE = "com.ericlinxie.androiddev.helloworld.MESSAGE";
+    ArrayList<EventObject> events = new ArrayList<EventObject>();
+    TreeMap<Double, EventObject> treeEvents = new TreeMap<Double, EventObject>();
+    double lat = 37.76;
+    double lon = -122.427;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AccessToken accessToken;
         AccessToken dummyToken;
+
 //        final TextView info = (TextView) findViewById(R.id.info);
         final LoginButton loginButton;
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -170,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                                                 "free lunch", "free dinner", "meal provided", "refreshments", "will be served"};
                             int isFreeFood;
                             EventObject singleEvent;
-                            ArrayList<EventObject> events = new ArrayList<EventObject>();
+
                             Log.d("to the", "loop");
                             Log.d("data", data.toString());
                             for (int i = 0; i < data.length(); i++) {
@@ -212,17 +221,17 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d("to the", "new object");
                                         singleEvent = new EventObject(title, description, locationName, latitude, longitude);
                                         Log.d("add the", "new object");
-                                        events.add(singleEvent);
+                                        treeEvents.put((latitude - lat + longitude - lon), singleEvent);
                                         break;
                                     }
                                 }
                                 Log.d("at the ", "end of loop");
                             }
-                            Log.d("print the ", "object list");
-                            for (int g = 0; g < events.size(); g++){
-                                Log.d("title: ", events.get(g).title);
-                                Log.d("event: ", events.get(g).toString());
-                            }
+//                            Log.d("print the ", "object list");
+//                            for (int g = 0; g < treeEvents.size(); g++){
+//                                Log.d("title: ", events.get(g).title);
+//                                Log.d("event: ", events.get(g).toString());
+//                            }
 
                         }
                             catch (Exception e) {Log.d("wow", "this parsing doesn't work");
@@ -240,12 +249,16 @@ public class MainActivity extends AppCompatActivity {
         parameters.putString("limit","100");
         request.setParameters(parameters);
         GraphRequestAsyncTask task = request.executeAsync();
-//        try {
-//            task.get();
-//        }
-//        catch (Exception e){Log.d("failed", "completely");}
 
-
+        try {
+            task.get();
+        }
+        catch (Exception e){Log.d("failed", "completely");}
+//        ArrayAdapter<EventObject> adapter = new ArrayAdapter<EventObject>(this,
+//                android.R.layout.simple_list_item_1, events);
+//
+//        ListView listView = (ListView) findViewById(R.id.listview);
+//        listView.setAdapter(adapter);
 //        String message =  " smuckers";
 //
 //        intent.putExtra(EXTRA_MESSAGE, message);
