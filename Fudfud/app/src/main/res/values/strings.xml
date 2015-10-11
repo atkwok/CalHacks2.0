@@ -5,4 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="button_send">find local events</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_list_display">ListDisplay</string>
+
+    <string name="other_app_name">ListDisplay</string>
+
 </resources>

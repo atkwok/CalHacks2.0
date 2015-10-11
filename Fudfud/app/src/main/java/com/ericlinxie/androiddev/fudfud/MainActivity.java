@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     TreeMap<Integer, EventObject> treeEvents = new TreeMap<Integer, EventObject>();
     double lat = 37.76;
     double lon = -122.427;
+    public static String THEDISTANCES = "the distances";
+    public static String THEEVENTS = "the events";
 
     final Parcel p1 = Parcel.obtain();
 
@@ -270,11 +272,11 @@ public class MainActivity extends AppCompatActivity {
 //        listView.setAdapter(adapter);
 //        String message =  " smuckers";
 
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(this, ListDisplay.class);
         ArrayList<Integer> theDistances = new ArrayList<>(treeEvents.keySet());
-        intent.putExtra("your distances", theDistances);
+        intent.putExtra(THEDISTANCES, theDistances);
         ArrayList<EventObject> theEvents = new ArrayList<>(treeEvents.values());
-        intent.putExtra("your events array", theEvents);
+        intent.putExtra(THEEVENTS, theEvents);
 
         startActivity(intent);
     }
