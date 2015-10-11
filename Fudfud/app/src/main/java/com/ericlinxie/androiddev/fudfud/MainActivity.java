@@ -31,12 +31,15 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookCallback;
 import com.facebook.CallbackManager;
 
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
+    public final static String EXTRA_MESSAGE = "com.ericlinxie.androiddev.helloworld.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +128,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     public MainActivity() {
+    }
+
+    /** Called when the user clicks the Send button */
+    public void sendMessage(View view){
+        //Do something in response to the button
+        Intent intent = new Intent(this, Main2Activity.class);
+        String message =  " smuckers";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
 
