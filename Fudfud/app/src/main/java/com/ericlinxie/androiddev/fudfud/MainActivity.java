@@ -2,6 +2,7 @@ package com.ericlinxie.androiddev.fudfud;
 
 import java.util.ArrayList;
 
+import android.os.Parcel;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -53,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
     JSONObject yourEvents;
     public final static String EXTRA_MESSAGE = "com.ericlinxie.androiddev.helloworld.MESSAGE";
     ArrayList<EventObject> events = new ArrayList<EventObject>();
-    TreeMap<Double, EventObject> treeEvents = new TreeMap<Double, EventObject>();
+    TreeMap<Integer, EventObject> treeEvents = new TreeMap<Integer, EventObject>();
     double lat = 37.76;
     double lon = -122.427;
+
+    final Parcel p1 = Parcel.obtain();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,9 +155,12 @@ public class MainActivity extends AppCompatActivity {
     public void sendMessage(View view){
         //Do something in response to the button
 
-//        Intent intent = new Intent(this, Main2Activity.class);
+
         Log.d("is error", "above");
         AccessToken theToken = AccessToken.getCurrentAccessToken();
+        if(theToken == null){
+            return;
+        }
         Log.d("is error", "above");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -219,9 +226,10 @@ public class MainActivity extends AppCompatActivity {
                                             longitude = 0.0;
                                         }
                                         Log.d("to the", "new object");
-                                        singleEvent = new EventObject(title, description, locationName, latitude, longitude);
+                                        singleEvent = new EventObject(p1);
+                                        singleEvent.addingEventObject(title, description, locationName, latitude, longitude);
                                         Log.d("add the", "new object");
-                                        treeEvents.put((latitude - lat + longitude - lon), singleEvent);
+                                        treeEvents.put((int)(latitude - lat + longitude - lon), singleEvent);
                                         break;
                                     }
                                 }
@@ -254,15 +262,21 @@ public class MainActivity extends AppCompatActivity {
             task.get();
         }
         catch (Exception e){Log.d("failed", "completely");}
+
 //        ArrayAdapter<EventObject> adapter = new ArrayAdapter<EventObject>(this,
 //                android.R.layout.simple_list_item_1, events);
-//
+
 //        ListView listView = (ListView) findViewById(R.id.listview);
 //        listView.setAdapter(adapter);
 //        String message =  " smuckers";
-//
-//        intent.putExtra(EXTRA_MESSAGE, message);
-//        startActivity(intent);
+
+        Intent intent = new Intent(this, Main2Activity.class);
+        ArrayList<Integer> theDistances = new ArrayList<>(treeEvents.keySet());
+        intent.putExtra("your distances", theDistances);
+        ArrayList<EventObject> theEvents = new ArrayList<>(treeEvents.values());
+        intent.putExtra("your events array", theEvents);
+
+        startActivity(intent);
     }
 
 
