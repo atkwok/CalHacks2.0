@@ -59,11 +59,17 @@ public class MainActivity extends AppCompatActivity {
     double lon = -122.427;
     public static String THEDISTANCES = "the distances";
     public static String THEEVENTS = "the events";
-    public static String THEDESCRIPTIONS = "the events";
+    public static String THEDESCRIPTIONS = "the descriptions";
+    boolean done = false;
+    int dummy = 0;
 
     final Parcel p1 = Parcel.obtain();
 
     ArrayList<String> theDescriptions = new ArrayList<String>();
+    MainActivity theActivity = this;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onCompleted(GraphResponse response) {
                         // Insert your code here
                         yourEvents = response.getJSONObject();
+                        Intent intent = new Intent(theActivity, ListDisplay.class);
                         try {
 
                             JSONArray data = response.getJSONObject().getJSONArray("data");
@@ -247,11 +254,15 @@ public class MainActivity extends AppCompatActivity {
 //                                Log.d("title: ", events.get(g).title);
 //                                Log.d("event: ", events.get(g).toString());
 //                            }
-
+                            done = true;
                         }
                             catch (Exception e) {Log.d("wow", "this parsing doesn't work");
+                                done = true;
                             }
                         Log.d("the json", yourEvents.toString());
+                        intent.putExtra(THEDESCRIPTIONS,theDescriptions);
+
+                        startActivity(intent);
 
                     }
                 });
@@ -261,20 +272,28 @@ public class MainActivity extends AppCompatActivity {
         parameters.putString("type", "event");
         parameters.putString("center", "37.76,-122.427");
         parameters.putString("distance", "10");
-        parameters.putString("limit","100");
+        parameters.putString("limit","50");
         request.setParameters(parameters);
         GraphRequestAsyncTask task = request.executeAsync();
 
         try {
-            task.get();
-            Intent intent = new Intent(this, ListDisplay.class);
+            List output = task.get();
+//            Intent intent = new Intent(this, ListDisplay.class);
+//            while (done == false){
+//                dummy = 1 + 1;
+//            }
+            Log.d("done: ", Boolean.toString(done));
+
             ArrayList<Integer> theDistances = new ArrayList<>(treeEvents.keySet());
 //        intent.putExtra(THEDISTANCES, theDistances);
             ArrayList<EventObject> theEvents = new ArrayList<>(treeEvents.values());
 //        intent.putExtra(THEEVENTS, theEvents);
-            intent.putExtra(THEDESCRIPTIONS,theDescriptions);
-
-            startActivity(intent);
+            theDescriptions.add("stuff to add");
+            theDescriptions.add("by David Yan, Alan Kwok, Eric Linxie, and Tom Cheng");
+            theDescriptions.add("maybe there is no free food :O");
+//            intent.putExtra(THEDESCRIPTIONS,theDescriptions);
+//
+//            startActivity(intent);
         }
         catch (Exception e){Log.d("failed", "completely");}
 
