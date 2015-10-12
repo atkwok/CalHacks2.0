@@ -82,9 +82,8 @@ public class MainActivity extends AppCompatActivity {
 //        final TextView info = (TextView) findViewById(R.id.info);
         final LoginButton loginButton;
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends, user_events, user_photos");
+        loginButton.setReadPermissions("user_friends, user_events");
         callbackManager = CallbackManager.Factory.create();
-        System.out.print("hello");
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
@@ -260,7 +259,8 @@ public class MainActivity extends AppCompatActivity {
                                 done = true;
                             }
                         Log.d("the json", yourEvents.toString());
-                        intent.putExtra(THEDESCRIPTIONS,theDescriptions);
+                        intent.putExtra(THEDESCRIPTIONS, theDescriptions);
+                        theDescriptions = new ArrayList<String>();
 
                         startActivity(intent);
 
