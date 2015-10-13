@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
                 theToken,
-                "/search",
+                "/me/events", //used to be search
                 new GraphRequest.Callback() {
                     @Override
 
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
                             String[] searchFreeFood = { "free food", "free refreshments",
                                                 "free lunch","free sliver","free chipotle",
-                                    "provided", "free dinner", "meal provided", "refreshments", "will be served"};
+                                    "provided", "free dinner", "meal provided", "refreshments", "will be served", "cater", "catering"};
                             int isFreeFood;
                             EventObject singleEvent;
 
@@ -241,8 +241,13 @@ public class MainActivity extends AppCompatActivity {
                                         singleEvent = new EventObject(p1);
                                         singleEvent.addingEventObject(title, description, locationName, latitude, longitude);
                                         Log.d("add the", "new object");
-                                        treeEvents.put((int)(latitude - lat + longitude - lon), singleEvent);
-                                        theDescriptions.add(description);
+                                        treeEvents.put((int) (latitude - lat + longitude - lon), singleEvent);
+                                        theDescriptions.add("       ");
+                                        theDescriptions.add("-----------------------");
+                                        theDescriptions.add("NAME: " + title);
+                                        theDescriptions.add("LOCATION: " + locationName);
+                                        theDescriptions.add("DESCRIPTION: " + description);
+
                                         break;
                                     }
                                 }
@@ -268,11 +273,18 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Bundle parameters = new Bundle();
-        parameters.putString("q", "f");
-        parameters.putString("type", "event");
-        parameters.putString("center", "37.76,-122.427");
-        parameters.putString("distance", "10");
-        parameters.putString("limit","50");
+
+        //old search
+//        parameters.putString("q", "f");
+//        parameters.putString("type", "event");
+//        parameters.putString("center", "37.76,-122.427");
+//        parameters.putString("distance", "10");
+//        parameters.putString("limit","50");
+
+        //new search
+        parameters.putString("fields", "start_time,end_time,name,place,description");
+        parameters.putString("limit", "100");
+
         request.setParameters(parameters);
         GraphRequestAsyncTask task = request.executeAsync();
 
@@ -307,38 +319,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-//    @Override
-//    public View onCreateView(
-//            LayoutInflater inflater,
-//            ViewGroup container,
-//            Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.activity_main, container, false);
-//        LoginButton loginButton;
-//        loginButton = (LoginButton) view.findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("user_friends, user_events");
-//        // If using in a fragment
-////        loginButton.setFragment(this);
-//        // Other app specific specialization
-//
-//        // Callback registration
-//
-////        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-////            @Override
-////            public void onSuccess(LoginResult loginResult) {
-////                // App code
-////            }
-////
-////            @Override
-////            public void onCancel() {
-////                // App code
-////            }
-////
-////            @Override
-////            public void onError(FacebookException exception) {
-////                // App code
-////            }
-////        });
-//    return view;}
-
 }
+
+
